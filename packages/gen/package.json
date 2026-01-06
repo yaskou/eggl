@@ -1,0 +1,17 @@
+{
+  "name": "gen",
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@google/genai": "^1.34.0",
+    "db": "workspace:*",
+    "zod": "^4.2.1"
+  },
+  "scripts": {
+    "dev": "bun run index.ts"
+  }
+}
