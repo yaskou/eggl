@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
 import { useEffect, useRef, useState } from "react";
-import { type ReadQuestion, readQuestionsWithOffset } from "db";
+import { readQuestionsWithOffset } from "db";
 import { Virtuoso } from "react-virtuoso";
 import { useFetcher, type ShouldRevalidateFunction } from "react-router";
 import { CardWithScreentime } from "~/components/card/cardWithScreentime";
@@ -18,17 +18,21 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({ formAction }) => {
   return true;
 };
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ context, request }: Route.LoaderArgs) {
   const limit = 10;
 
   const searchParams = new URL(request.url).searchParams;
   const offset = Number(searchParams.get("offset"));
 
-  return await readQuestionsWithOffset(offset, limit);
+  return await readQuestionsWithOffset(
+    context.cloudflare.ctx.db,
+    offset,
+    limit,
+  );
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const [questions, setQuestions] = useState<ReadQuestion[]>(loaderData);
+  const [questions, setQuestions] = useState(loaderData);
   const offset = useRef(0); // loader2重呼び出し防止用
   const fetcher = useFetcher<typeof loader>();
 

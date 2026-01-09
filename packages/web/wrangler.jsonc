@@ -1,0 +1,6 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "eggl",
+  "compatibility_date": "2026-01-08",
+  "main": "./workers/app.ts",
+}

@@ -5,13 +5,17 @@
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "preview": "bun run build && vite preview",
+    "deploy": "bun run build && wrangler deploy",
+    "cf-typegen": "wrangler types",
+    "typecheck": "bun run cf-typegen && react-router typegen && tsc",
+    "postinstall": "bun run cf-typegen"
   },
   "dependencies": {
     "@radix-ui/react-scroll-area": "^1.2.10",
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
+    "@react-router/cloudflare": "^7.11.0",
     "@react-router/node": "7.10.1",
     "@react-router/serve": "7.10.1",
     "class-variance-authority": "^0.7.1",
@@ -27,6 +31,8 @@
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.20.0",
+    "@cloudflare/workers-types": "^4.20260108.0",
     "@react-router/dev": "7.10.1",
     "@tailwindcss/vite": "^4.1.13",
     "@types/node": "^22",
@@ -37,6 +43,7 @@
     "typescript": "^5.9.2",
     "vite": "^7.1.7",
     "vite-plugin-pwa": "^1.2.0",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "^5.1.4",
+    "wrangler": "4.58.0"
   }
 }

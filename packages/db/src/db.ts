@@ -1,11 +1,15 @@
-import "dotenv/config";
-import { drizzle } from "drizzle-orm/libsql";
+import { createClient } from "@libsql/client/web";
+import { drizzle, type LibSQLDatabase } from "drizzle-orm/libsql";
 import * as schema from "./schemas";
 
-export const db = drizzle({
-  connection: {
-    url: process.env.TURSO_CONNECTION_URL!,
-    authToken: process.env.TURSO_AUTH_TOKEN!,
-  },
-  schema,
-});
+export type DB = LibSQLDatabase<typeof schema>;
+export const createConnection = (url: string, authToken: string) => {
+  const client = createClient({
+    url,
+    authToken,
+  });
+  const db = drizzle(client, {
+    schema,
+  });
+  return db;
+};

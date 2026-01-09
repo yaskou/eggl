@@ -1,16 +1,16 @@
-import { createScreentime } from "db";
+import { createConnection, createScreentime } from "db";
 import { sessionId } from "~/cookies.server";
 import type { Route } from "./+types/screentime";
 import type { SendScreentimes } from "~/types/screentime";
 
-export async function action({ request }: Route.ActionArgs) {
+export async function action({ context, request }: Route.ActionArgs) {
   const cookieHeader = request.headers.get("Cookie");
   const cookie = (await sessionId.parse(cookieHeader)) || {};
   cookie.sessionId ??= crypto.randomUUID();
 
   const screentime = (await request.json()) as SendScreentimes;
 
-  await createScreentime({
+  await createScreentime(context.cloudflare.ctx.db, {
     id: screentime.id,
     sessionId: cookie.sessionId,
     status: screentime.isQuestion ? "question" : "answer",

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createQuestions } from "db";
+import { createConnection, createQuestions } from "db";
 import { GoogleGenAI } from "@google/genai";
 
 const questionSchema = z.object({
@@ -37,7 +37,11 @@ const main = async () => {
   }
   const output = questionsSchema.parse(JSON.parse(response.text));
 
-  await createQuestions(output.questions);
+  const client = createConnection(
+    process.env.TURSO_CONNECTION_URL!,
+    process.env.TURSO_AUTH_TOKEN!,
+  );
+  await createQuestions(client, output.questions);
 
   return 0;
 };
